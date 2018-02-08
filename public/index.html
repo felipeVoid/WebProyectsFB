@@ -13,7 +13,7 @@
 <body>
   <nav class="white" role="navigation">
     <div class="nav-wrapper container">
-      <a id="logo-container" href="#" class="brand-logo"><i class="material-icons">polymer</i></a>
+      <a id="logo-container" href="#" class="brand-logo"><i id="mat-logo" class="material-icons">alarm</i></a>
       <ul class="right hide-on-med-and-down">
         <li><a href="#">Navbar Link</a></li>
       </ul>
@@ -29,7 +29,7 @@
     <div class="section no-pad-bot">
       <div class="container">
         <br><br>
-        <h1 class="header center teal-text text-lighten-2">Firebase Hosting</h1>
+        <h1 id="header-title" class="header center teal-text text-lighten-2">Firebase Hosting</h1>
         <div class="row center">
           <h5 class="header col s12 light">A modern responsive front-end framework based on Material Design</h5>
         </div>
@@ -118,6 +118,19 @@
     <div class="parallax"><img src="background3.jpg" alt="Unsplashed background img 3"></div>
   </div>
 
+  <div class="preloader-wrapper big active"
+       style="position: fixed;left: 50%;top: 50%;">
+    <div class="spinner-layer spinner-blue-only">
+      <div class="circle-clipper left">
+        <div class="circle"></div>
+      </div><div class="gap-patch">
+      <div class="circle"></div>
+    </div><div class="circle-clipper right">
+      <div class="circle"></div>
+    </div>
+    </div>
+  </div>
+
   <footer class="page-footer teal">
     <div class="container">
       <div class="row">
@@ -159,6 +172,19 @@
   <script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
   <script src="js/materialize.js"></script>
   <script src="js/init.js"></script>
-
+  <script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
+  <script>
+      // Initialize Firebase
+      var config = {
+          apiKey: "AIzaSyDO0gNs3WbDi6tskImy6L2LuyfACmw-aM4",
+          authDomain: "fir-test-52ab4.firebaseapp.com",
+          databaseURL: "https://fir-test-52ab4.firebaseio.com",
+          projectId: "fir-test-52ab4",
+          storageBucket: "fir-test-52ab4.appspot.com",
+          messagingSenderId: "99065562053"
+      };
+      firebase.initializeApp(config);
+  </script>
+  <script src="js/functions.js"></script>
   </body>
 </html>
