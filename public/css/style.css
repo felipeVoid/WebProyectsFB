@@ -55,3 +55,11 @@ p {
 footer.page-footer {
   margin: 0;
 }
+
+.z-depth-4, .modal {
+  -webkit-box-shadow: none;
+  box-shadow: none;
+}
+.modal{
+  background-color: transparent;
+}
