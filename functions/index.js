@@ -6,15 +6,32 @@ const functions = require('firebase-functions');
 // exports.helloWorld = functions.https.onRequest((request, response) => {
 //  response.send("Hello from Firebase!");
 // });
-exports.bigben = functions.https.onRequest((req, res) => {
-    const hours = (new Date().getHours() % 12) + 1 // london is UTC + 1hr;
-    res.status(200).send(`<!doctype html>
-    <head>
-      <title>Time</title>
-    </head>
-    <body>
-      ${'BONG '.repeat(hours)}
-    </body>
-  </html>`);
+exports.paletteColors = functions.https.onRequest((req, res) => {
+    let palette_colors = [
+        'materialize-red',
+        'red',
+        'pink',
+        'purple',
+        'deep-purple',
+        'indigo',
+        'blue',
+        'light-blue',
+        'cyan',
+        'teal',
+        'green',
+        'light-green',
+        'lime',
+        'yellow',
+        'amber',
+        'orange',
+        'deep-orange',
+        'brown',
+        'blue-grey',
+        'grey',
+        'black',
+        'white',
+        'transparent',
+    ];
+    res.status(200).send(palette_colors);
 });
 

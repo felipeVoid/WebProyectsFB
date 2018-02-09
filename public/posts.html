@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <title>Parallax Template - Materialize</title>
+
+    <!-- CSS  -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link href="css/materialize.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link href="css/style.css" type="text/css" rel="stylesheet" media="screen,projection"/>
+    <link rel="shortcut icon" type="image/png" href="http://catalog.herbalife.com/favicon.ico"/>
+</head>
+<body>
+<div id="body-body" style="display: none">
+    <nav class="white" role="navigation">
+        <div class="nav-wrapper container">
+            <a id="logo-container" href="index.html" class="brand-logo">*</a>
+            <ul class="right hide-on-med-and-down">
+                <li><a class="posts-url" href="https://material.io/icons/"><i class="material-icons">account_circle</i></a></li>
+            </ul>
+
+            <ul id="nav-mobile" class="side-nav">
+                <li><a href="https://material.io/icons/"><i class="material-icons">account_circle</i></a></li>
+            </ul>
+            <a href="#" data-activates="nav-mobile" class="button-collapse def-color-text"><i class="material-icons">menu</i></a>
+        </div>
+    </nav>
+
+    <div id="index-banner" class="parallax-container">
+        <div class="section no-pad-bot">
+            <div class="container">
+                <br><br>
+                <h1 id="header-title" class="header center def-color-text text-lighten-2">Firebase Hosting</h1>
+                <div class="row center">
+                    <h5 id="header-text" class="header col s12 light">A modern responsive front-end framework based on Material Design</h5>
+                </div>
+                <div class="row center">
+                    <a href="http://materializecss.com/getting-started.html" id="download-button" class="btn-large waves-effect waves-light def-color lighten-1" target="_blank">Get Started</a>
+                </div>
+                <br><br>
+
+            </div>
+        </div>
+        <div class="parallax"><img id="img-header" src="background1.jpg" alt="Unsplashed background img 1"></div>
+    </div>
+
+    <div class="container">
+        <div class="section">
+
+            <div class="row">
+                <a id="btn-add-post" href="add_post.html" class="btn-floating btn-large waves-effect waves-light def-color"><i class="material-icons">add</i></a>
+                <div class="col s12 center">
+                    <h3><i class="mdi-content-send brown-text"></i></h3>
+                    <h4><b>A NON POST</b></h4>
+
+                    <div id="post-container">
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <footer class="page-footer def-color">
+        <div class="container">
+            <div class="row">
+                <div class="col l6 s12">
+                    <h5 class="white-text">Company Bio</h5>
+                    <p class="grey-text text-lighten-4">We are a team of college students working on this project like it's our full time job. Any amount would help support and continue development on this project and is greatly appreciated.</p>
+                </div>
+                <div class="col l3 s12">
+                    <h5 class="white-text">Settings</h5>
+                    <ul>
+                        <li><a class="white-text" href="#!">Link 1</a></li>
+                        <li><a class="white-text" href="#!">Link 2</a></li>
+                        <li><a class="white-text" href="#!">Link 3</a></li>
+                        <li><a class="white-text" href="#!">Link 4</a></li>
+                    </ul>
+                </div>
+                <div class="col l3 s12">
+                    <h5 class="white-text">Connect</h5>
+                    <ul>
+                        <li><a class="white-text" href="#!">Link 1</a></li>
+                        <li><a class="white-text" href="#!">Link 2</a></li>
+                        <li><a class="white-text" href="#!">Link 3</a></li>
+                        <li><a class="white-text" href="#!">Link 4</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-copyright">
+            <div class="container">
+                Made by <a class="brown-text text-lighten-3" href="http://materializecss.com">voiD</a>
+            </div>
+        </div>
+    </footer>
+</div>
+</body>
+<a style="display: none" class="waves-effect waves-light btn modal-trigger" href="#modal-preload">Modal</a>
+<div id="modal-preload" class="modal modal-fixed-footer">
+    <div class="preloader-wrapper big active"
+         style="position: fixed;left: 50%;top: 50%;">
+        <div class="spinner-layer spinner-blue-only">
+            <div class="circle-clipper left">
+                <div class="circle"></div>
+            </div><div class="gap-patch">
+            <div class="circle"></div>
+        </div><div class="circle-clipper right">
+            <div class="circle"></div>
+        </div>
+        </div>
+    </div>
+</div>
+
+<!--  Scripts-->
+<script src="https://code.jquery.com/jquery-2.1.1.min.js"></script>
+<script src="js/materialize.js"></script>
+<script src="js/init.js"></script>
+<script src="https://www.gstatic.com/firebasejs/4.9.1/firebase.js"></script>
+<script>
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyDO0gNs3WbDi6tskImy6L2LuyfACmw-aM4",
+        authDomain: "fir-test-52ab4.firebaseapp.com",
+        databaseURL: "https://fir-test-52ab4.firebaseio.com",
+        projectId: "fir-test-52ab4",
+        storageBucket: "fir-test-52ab4.appspot.com",
+        messagingSenderId: "99065562053"
+    };
+    firebase.initializeApp(config);
+</script>
+<script src="js/functions.js"></script>
+</body>
+</html>
