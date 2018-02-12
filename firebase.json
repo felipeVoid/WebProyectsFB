@@ -1,5 +1,14 @@
 {
   "hosting": {
+    "redirects": [ {
+      "source": "/posts",
+      "destination": "/posts.html",
+      "type" : 301
+    },{
+      "source": "/posts/add_post",
+      "destination": "/add_post.html",
+      "type" : 301
+    } ],
     "public": "public",
     "ignore": [
       "firebase.json",

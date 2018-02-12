@@ -1,6 +1,6 @@
 (function($){
     $(function(){
-        $('#modal-preload').modal();
+        $('.modal').modal();
 
         let palette_colors = [
             'materialize-red',
@@ -34,6 +34,7 @@
             type:  'get',
             dataType: "json",
             beforeSend: function () {
+                $('#modal-preload').addClass('modal-transparent');
                 $('#modal-preload').modal('open');
             },
             success:  function (response) {
@@ -80,22 +81,40 @@
         });
 
         $("#send-post").click(function() {
-            let data_post = $('#post-form').serialize();
+            let BreakException = {};
+            let data_status = true;
             try {
-                write_post_data(
-                    data_post.author,
-                    data_post.title,
-                    data_post.detail,
-                    data_post.image,
-                    data_post.content,
-                    data_post.author_color,
-                    data_post.email);
-                console.log('functions:93/listo...');
+                let data_post = $('#post-form').serializeArray();
+                console.log(data_post);
+                for(post in data_post){
+                    if(data_post[post].value === '') {
+                        data_status = false;
+                        throw BreakException;
+                    }
+                }
+                /*
+                write_post_data(data_post[0].value,
+                    data_post[1].value,
+                    data_post[2].value,
+                    data_post[3].value,
+                    data_post[4].value,
+                    data_post[5].value,
+                    data_post[6].value);
+                    */
+                $('#post-form').trigger("reset");
+                $('#modal1 .modal-content h4').innerHTML = 'ANONFACT añadido!';
+                $('#modal1 .modal-content p').innerHTML = 'Continuar agregando?';
+                $('#modal1').modal('open');
             }catch (e){
-                console.log('functions:95/malo.../'+e);
+                $('#modal1 .modal-content h4').innerHTML = 'ERROR!';
+                $('#modal1 .modal-content p').innerHTML = 'Error: '+e;
+                $('#modal1').modal('open');
             }
-        });
 
+        });
+        function check_empty_string(stringValue) {
+            return (stringValue === '');
+        }
         function print_content(contentItem, defColor) {
             let defColorContent = contentItem.icon_color;
             if(defColorContent === 0)defColorContent = defColor;
@@ -248,20 +267,60 @@
             let theme_text_color = $('.' + def_color + '-text');
             theme_text_color.removeClass(def_color + '-text');
             theme_text_color.addClass(color + '-text');
+
+            $('.input-field input[type=text]:focus').addClass(color + '-text');
+            $('.input-field label').addClass('grey-text');
+            let input_bottom_line = 'input:not([type]):focus:not([readonly]),'+
+            'input[type=text]:not(.browser-default):focus:not([readonly]),'+
+                'input[type=password]:not(.browser-default):focus:not([readonly]),'+
+                'input[type=email]:not(.browser-default):focus:not([readonly]),'+
+                'input[type=url]:not(.browser-default):focus:not([readonly]),'+
+                'input[type=time]:not(.browser-default):focus:not([readonly]),'+
+                'input[type=date]:not(.browser-default):focus:not([readonly]),'+
+                'input[type=datetime]:not(.browser-default):focus:not([readonly]),'+
+                'input[type=datetime-local]:not(.browser-default):focus:not([readonly]),'+
+                'input[type=tel]:not(.browser-default):focus:not([readonly]),'+
+                'input[type=number]:not(.browser-default):focus:not([readonly]),'+
+                'input[type=search]:not(.browser-default):focus:not([readonly]),'+
+            'textarea.materialize-textarea:focus:not([readonly]){'+
+                'border-bottom:1px solid '+set_slide_color(color)+';' +
+                'box-shadow:0 1px 0 0 '+set_slide_color(color)+';}';
+            $('body').append("<style>" +
+                                input_bottom_line+
+                           "</style>");
         }
-        function write_post_data(author, title, detail, image, content, author_color, email) {
-            let database = firebase.database();
-            let newPostKey = firebase.database().ref().child('Hosting').child('posts').push().key
-            firebase.database().ref('Hosting/posts/' + newPostKey).set({
+        function write_post_data(author, author_color, image_url, email, title, detail, content_html) {
+            let postData = {
                 author: author,
                 title: title,
                 detail : detail,
-                image : image,
-                content : content,
+                image : image_url,
+                content : content_html,
                 author_color : author_color,
                 email : email
-            });
+            };
+            // Get a key for a new Post.
+            let newPostKey = firebase.database().ref().child('Hosting').child('posts').push().key;
+
+            // Write the new post's data simultaneously in the posts list and the user's post list.
+            let updates = {};
+            updates['/Hosting/posts/' + newPostKey] = postData;
+            return firebase.database().ref().update(updates);
         }
+
+        let valor = 5;
+        $.ajax({
+            type: "GET",
+            beforeSend: function(request) {
+                request.setRequestHeader("Authorization", 'bearer 59026a6cd7dd4cc7a5517090659b9bf6');
+            },
+            url: "https://rinnolab.vms.grupoz.cl/api/v1/video",
+            data: "page="+valor,
+            processData: false,
+            success: function(msg) {
+                console.log(msg);
+            }
+        });
     }); // end of document ready
 })(jQuery); // end of jQuery name space
 
