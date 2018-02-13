@@ -1,5 +1,9 @@
 (function($){
     $(function(){
+        let ip_user = '';
+        $.getJSON('https://freegeoip.net/json/?callback=?', function(data) {
+            ip_user = data.ip;
+        });
         $('.modal').modal();
 
         let palette_colors = [
@@ -27,6 +31,14 @@
             'white',
             'transparent',
         ];
+
+        let cont_colors = 0;
+        $.each(palette_colors, function(i, p) {
+            if(cont_colors !== palette_colors.length-1 && cont_colors !== palette_colors.length-2){
+                $('#author_color').append($('<option></option>').val(p).html(p));
+            }
+            cont_colors++;
+        });
 
         const url_firebase = 'https://fir-test-52ab4.firebaseio.com/Hosting/.json';
         $.ajax({
@@ -65,20 +77,40 @@
                 }
 
                 let posts = response['posts'];
+                let post_index = 0;
+                let post_child = 0;
                 for (post in posts){
-                    print_post(posts[post]);
+                    if(multiple(post_index)){
+                        post_child++;
+                    }
+                    print_post(posts[post], post_index, post_child);
+                    post_index++;
                 }
-
-                let posts_url = response['posts_url'];
-                $('.posts-url').attr('href', posts_url);
 
                 init();
             }
         });
 
-        $('#image_url').change(function() {
-            console.log($('#image_url').val());
-            $('#image-preview').attr('src', $(this).val());
+        $('#btn-filter-module').click(function() {
+            let update_col = '#post-section > .row > .col';
+            $(update_col).removeClass('s12 m4');
+            $(update_col).addClass('s12 m4');
+            Materialize.fadeInImage(update_col);
+        });
+
+        $('#btn-filter-list').click(function() {
+            let update_col = '#post-section > .row > .col';
+            $(update_col).removeClass('s12 m4');
+            $(update_col).addClass('col s12');
+            Materialize.fadeInImage(update_col);
+        });
+
+        $('#image_url').keyup(function() {
+            let image_previw = '#image-preview';
+            $(image_previw).attr('src', $(this).val());
+            $(image_previw).on('error', function() {
+                $(image_previw).attr('src', 'img/no-preview-available.png');
+            });
         });
 
         $("#send-post").click(function() {
@@ -92,18 +124,20 @@
                     }
                 }
 
-                write_post_data(data_post[0].value,
-                    data_post[1].value,
-                    data_post[2].value,
-                    data_post[3].value,
-                    data_post[4].value,
-                    data_post[5].value,
+                write_post_data(
+                    clear_content_html(data_post[0].value),
+                    clear_content_html(data_post[1].value),
+                    clear_content_html(data_post[2].value),
+                    clear_content_html(data_post[3].value),
+                    clear_content_html(data_post[4].value),
+                    clear_content_html(data_post[5].value),
                     clear_content_html(data_post[6].value));
 
                 $(post_form).trigger("reset");
                 $('#modal-post-title').html('ANONFACT añadido!');
                 $('#modal-post-text').html('<div class="def-color-text">Continuar agregando?</div>');
             }catch (e){
+                console.log(e);
                 $('#modal-post-title').html('ERROR!');
                 $('#modal-post-text').html('<div class="def-color-text">Error: Todos los campos son obligatorios!</div>');
             }
@@ -113,9 +147,7 @@
             });
 
         });
-        function check_empty_string(stringValue) {
-            return (stringValue === '');
-        }
+
         function clear_content_html(rawString) {
             let clean_html = rawString;
             clean_html = clean_html.replace('<script type="text/javascript">', '');
@@ -128,6 +160,9 @@
             $('.parallax').parallax();
             $('.slider').slider();
             $('select').material_select();
+        }
+        function multiple(value){
+            return ( value % 3 === 0 );
         }
         function print_content(contentItem, defColor) {
             let defColorContent = contentItem.icon_color;
@@ -143,8 +178,9 @@
                 '</div>';
             $('#inner-content').append(item);
         }
-        function print_post(postContent) {
-            let item = '<div class="card s12 m4">'+
+        function print_post(postContent, index, child) {
+            let item = '<div class="col s12 m4 anim-post">'+
+                '<div class="card">'+
                 '<div class="card-image waves-effect waves-block waves-light">'+
                 '<img class="activator" src="'+postContent.image+'">'+
                 '</div>'+
@@ -156,13 +192,18 @@
                 '<span class="card-title grey-text text-darken-4"><b>'+postContent.title+'</b><i class="material-icons right">close</i></span>'+
                 '<div>'+postContent.content+'</div>'+
                 '</div>'+
-                '<div class="'+postContent.author_color+'">'+
+                '<div class="center '+postContent.author_color+'">'+
                 '<div class="container">'+
                 'Made by <a class="white-text text-lighten-3" href="http://materializecss.com">'+postContent.author+'</a>'+
                 '</div>'+
                 '</div>' +
+                '</div>' +
                 '</div>';
-            $('#post-container').append(item);
+            let post_container = '<div id="post-container'+child+'" class="row"></div>';
+            if(multiple(index)){
+                $('#post-section').append(post_container)
+            }
+            $('#post-container'+child).append(item);
         }
         function print_slide(contentItem) {
             let item = '<li>'+
@@ -180,6 +221,8 @@
             $('#header-text').html(headerObj.text);
             $('#download-button').attr('href', headerObj.button_start);
             $('#img-header').attr('src', headerObj.bg_img);
+            $('.posts-url').attr('href', headerObj.button_start);
+            $('.posts-url i').html(headerObj.post_icon);
         }
         function set_slide_color(themeColor) {
             let slide_active_color = '#673ab7';
@@ -317,7 +360,8 @@
                 image : image_url,
                 content : content_html,
                 author_color : author_color,
-                email : email
+                email : email,
+                ip: ip_user
             };
             // Get a key for a new Post.
             let newPostKey = firebase.database().ref().child('Hosting').child('posts').push().key;
@@ -328,19 +372,24 @@
             return firebase.database().ref().update(updates);
         }
 
-        let valor = 5;
-        $.ajax({
-            type: "GET",
-            beforeSend: function(request) {
-                request.setRequestHeader("Authorization", 'bearer 59026a6cd7dd4cc7a5517090659b9bf6');
-            },
-            url: "https://rinnolab.vms.grupoz.cl/api/v1/video",
-            data: "page="+valor,
-            processData: false,
-            success: function(msg) {
-                //console.log(msg);
-            }
-        });
+        //VMS API GrupoZ
+        function vms_grupoz(pageValue){
+            let data_videos;
+            $.ajax({
+                type: "GET",
+                beforeSend: function(request) {
+                    request.setRequestHeader("Authorization", 'bearer 59026a6cd7dd4cc7a5517090659b9bf6');
+                },
+                url: "https://rinnolab.vms.grupoz.cl/api/v1/video",
+                data: "page="+pageValue,
+                processData: false,
+                success: function(data) {
+                    data_videos = data;
+                    return data_videos;
+                }
+            });
+        }
+
     }); // end of document ready
 })(jQuery); // end of jQuery name space
 

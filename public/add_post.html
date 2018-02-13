@@ -36,7 +36,7 @@
                     <h5 id="header-text" class="header col s12 light">A modern responsive front-end framework based on Material Design</h5>
                 </div>
                 <div class="row center">
-                    <a href="http://materializecss.com/getting-started.html" id="download-button" class="btn-large waves-effect waves-light def-color lighten-1" target="_blank">Get Started</a>
+                    <a href="http://materializecss.com/getting-started.html" id="download-button" class="btn-large waves-effect waves-light def-color lighten-1">Get Started</a>
                 </div>
                 <br><br>
 
@@ -54,28 +54,28 @@
                             <input id="author" name="author" type="text" class="validate">
                             <label for="author">Author Name</label>
                         </div>
-                        <div class="input-field col s12">
-                            <input id="author_color" name="author_color" type="text" class="validate">
-                            <label for="author_color">Author Background Color</label>
-                        </div>
+
                         <!--
                         <div class="input-field col s12">
-                            <select>
+                            <input id="author_color2" name="author_color2" type="text" class="validate">
+                            <label for="author_color">Author Background Color</label>
+                        </div>
+                        -->
+
+                        <div class="input-field col s12">
+                            <select id="author_color" name="author_color">
                                 <option value="" disabled selected>Choose your option</option>
-                                <option value="1">Option 1</option>
-                                <option value="2">Option 2</option>
-                                <option value="3">Option 3</option>
                             </select>
                             <label>Author Background Color</label>
                         </div>
-                        -->
+
                     </div>
                     <div class="row">
-                        <div class="input-field col s8">
+                        <div class="input-field col s12 m6">
                             <input id="image_url" name="image_url" type="text" class="validate">
                             <label for="image_url">Image URL</label>
                         </div>
-                        <div class="input-field col s4">
+                        <div class="center input-field col s12 m6">
                             <div><b>Image Preview</b></div>
                             <img style="width:inherit;" id="image-preview" src="img/no-preview-available.png">
                         </div>
@@ -140,7 +140,7 @@
         </div>
         <div class="footer-copyright">
             <div class="container">
-                Made by <a class="brown-text text-lighten-3" href="http://materializecss.com">voiD</a>
+                Made by <a class="def-color-text text-lighten-3" href="http://materializecss.com">voiD</a>
             </div>
         </div>
     </footer>
@@ -163,7 +163,7 @@
 </div>
 <div id="modal-post" class="modal">
     <div class="modal-content">
-        <h4 id="modal-post-title">Error</h4>
+        <h4 class="def-color-text" id="modal-post-title">Error</h4>
         <p id="modal-post-text">Texto error</p>
     </div>
     <div class="modal-footer">
