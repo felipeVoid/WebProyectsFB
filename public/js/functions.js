@@ -36,8 +36,10 @@
             beforeSend: function () {
                 $('#modal-preload').addClass('modal-transparent');
                 $('#modal-preload').modal('open');
+                $('.modal-overlay').addClass('modal-overlay-load');
             },
             success:  function (response) {
+                $('.modal-overlay').removeClass('modal-overlay-load');
                 $('#body-body').css({display: "block"});
                 $('#modal-preload').modal('close');
 
@@ -70,8 +72,7 @@
                 let posts_url = response['posts_url'];
                 $('.posts-url').attr('href', posts_url);
 
-                $('.parallax').parallax();
-                $('.slider').slider();
+                init();
             }
         });
 
@@ -81,39 +82,52 @@
         });
 
         $("#send-post").click(function() {
+            let post_form = '#post-form';
             let BreakException = {};
-            let data_status = true;
             try {
-                let data_post = $('#post-form').serializeArray();
-                console.log(data_post);
+                let data_post = $(post_form).serializeArray();
                 for(post in data_post){
                     if(data_post[post].value === '') {
-                        data_status = false;
                         throw BreakException;
                     }
                 }
-                /*
+
                 write_post_data(data_post[0].value,
                     data_post[1].value,
                     data_post[2].value,
                     data_post[3].value,
                     data_post[4].value,
                     data_post[5].value,
-                    data_post[6].value);
-                    */
-                $('#post-form').trigger("reset");
-                $('#modal1 .modal-content h4').innerHTML = 'ANONFACT añadido!';
-                $('#modal1 .modal-content p').innerHTML = 'Continuar agregando?';
-                $('#modal1').modal('open');
+                    clear_content_html(data_post[6].value));
+
+                $(post_form).trigger("reset");
+                $('#modal-post-title').html('ANONFACT añadido!');
+                $('#modal-post-text').html('<div class="def-color-text">Continuar agregando?</div>');
             }catch (e){
-                $('#modal1 .modal-content h4').innerHTML = 'ERROR!';
-                $('#modal1 .modal-content p').innerHTML = 'Error: '+e;
-                $('#modal1').modal('open');
+                $('#modal-post-title').html('ERROR!');
+                $('#modal-post-text').html('<div class="def-color-text">Error: Todos los campos son obligatorios!</div>');
             }
+            $('#modal-post').modal('open');
+            $("#modal-ver-posts").click(function() {
+                window.location.replace('/posts');
+            });
 
         });
         function check_empty_string(stringValue) {
             return (stringValue === '');
+        }
+        function clear_content_html(rawString) {
+            let clean_html = rawString;
+            clean_html = clean_html.replace('<script type="text/javascript">', '');
+            clean_html = clean_html.replace('<script>', '');
+            clean_html = clean_html.replace('<script', '');
+            clean_html = clean_html.replace('</script>', '');
+            return clean_html;
+        }
+        function init(){
+            $('.parallax').parallax();
+            $('.slider').slider();
+            $('select').material_select();
         }
         function print_content(contentItem, defColor) {
             let defColorContent = contentItem.icon_color;
@@ -137,27 +151,27 @@
                 '<div class="card-content left-align">'+
                 '<span class="card-title activator grey-text text-darken-4">'+postContent.title+'<i class="material-icons right">more_vert</i></span>'+
                 '<p><b>'+postContent.detail+'</b></p>'+
-            '</div>'+
-            '<div class="card-reveal">'+
+                '</div>'+
+                '<div class="card-reveal">'+
                 '<span class="card-title grey-text text-darken-4"><b>'+postContent.title+'</b><i class="material-icons right">close</i></span>'+
                 '<div>'+postContent.content+'</div>'+
-            '</div>'+
+                '</div>'+
                 '<div class="'+postContent.author_color+'">'+
-                    '<div class="container">'+
-                        'Made by <a class="white-text text-lighten-3" href="http://materializecss.com">'+postContent.author+'</a>'+
-                    '</div>'+
+                '<div class="container">'+
+                'Made by <a class="white-text text-lighten-3" href="http://materializecss.com">'+postContent.author+'</a>'+
+                '</div>'+
                 '</div>' +
                 '</div>';
             $('#post-container').append(item);
         }
         function print_slide(contentItem) {
             let item = '<li>'+
-                           '<img src="'+contentItem.image+'">'+
-                           '<div class="caption '+contentItem.text_align+'-align">'+
-                               '<h3 class="'+contentItem.title_color+'-text">'+contentItem.title+'</h3>'+
-                               '<h5 class="light '+contentItem.text_color+'-text text-lighten-3">'+contentItem.text+'</h5>'+
-                           '</div>'+
-                       '</li>';
+                '<img src="'+contentItem.image+'">'+
+                '<div class="caption '+contentItem.text_align+'-align">'+
+                '<h3 class="'+contentItem.title_color+'-text">'+contentItem.title+'</h3>'+
+                '<h5 class="light '+contentItem.text_color+'-text text-lighten-3">'+contentItem.text+'</h5>'+
+                '</div>'+
+                '</li>';
             $('#home-slider').append(item);
         }
         function set_header(headerObj) {
@@ -271,7 +285,7 @@
             $('.input-field input[type=text]:focus').addClass(color + '-text');
             $('.input-field label').addClass('grey-text');
             let input_bottom_line = 'input:not([type]):focus:not([readonly]),'+
-            'input[type=text]:not(.browser-default):focus:not([readonly]),'+
+                'input[type=text]:not(.browser-default):focus:not([readonly]),'+
                 'input[type=password]:not(.browser-default):focus:not([readonly]),'+
                 'input[type=email]:not(.browser-default):focus:not([readonly]),'+
                 'input[type=url]:not(.browser-default):focus:not([readonly]),'+
@@ -282,12 +296,18 @@
                 'input[type=tel]:not(.browser-default):focus:not([readonly]),'+
                 'input[type=number]:not(.browser-default):focus:not([readonly]),'+
                 'input[type=search]:not(.browser-default):focus:not([readonly]),'+
-            'textarea.materialize-textarea:focus:not([readonly]){'+
+                'textarea.materialize-textarea:focus:not([readonly]){'+
                 'border-bottom:1px solid '+set_slide_color(color)+';' +
                 'box-shadow:0 1px 0 0 '+set_slide_color(color)+';}';
+
+            let icon_prefix = '.input-field .prefix.active{color:'+set_slide_color(color)+';}';
+
+            let select_text_color = '.dropdown-content li > a, .dropdown-content li > span{color:'+set_slide_color(color)+';}';
             $('body').append("<style>" +
-                                input_bottom_line+
-                           "</style>");
+                input_bottom_line +
+                icon_prefix +
+                select_text_color +
+                "</style>");
         }
         function write_post_data(author, author_color, image_url, email, title, detail, content_html) {
             let postData = {
@@ -318,7 +338,7 @@
             data: "page="+valor,
             processData: false,
             success: function(msg) {
-                console.log(msg);
+                //console.log(msg);
             }
         });
     }); // end of document ready

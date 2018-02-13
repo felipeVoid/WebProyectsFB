@@ -58,6 +58,17 @@
                             <input id="author_color" name="author_color" type="text" class="validate">
                             <label for="author_color">Author Background Color</label>
                         </div>
+                        <!--
+                        <div class="input-field col s12">
+                            <select>
+                                <option value="" disabled selected>Choose your option</option>
+                                <option value="1">Option 1</option>
+                                <option value="2">Option 2</option>
+                                <option value="3">Option 3</option>
+                            </select>
+                            <label>Author Background Color</label>
+                        </div>
+                        -->
                     </div>
                     <div class="row">
                         <div class="input-field col s8">
@@ -89,6 +100,7 @@
                     </div>
                     <div class="row">
                         <div class="input-field col s12">
+                            <i class="material-icons prefix">mode_edit</i>
                             <textarea id="content_html" name="content_html" class="materialize-textarea"></textarea>
                             <label for="content_html">Post Content</label>
                         </div>
@@ -103,25 +115,25 @@
         <div class="container">
             <div class="row">
                 <div class="col l6 s12">
-                    <h5 class="white-text">Company Bio</h5>
+                    <h5 class="white-text">VoidNexus</h5>
                     <p class="grey-text text-lighten-4">We are a team of college students working on this project like it's our full time job. Any amount would help support and continue development on this project and is greatly appreciated.</p>
                 </div>
                 <div class="col l3 s12">
                     <h5 class="white-text">Settings</h5>
                     <ul>
-                        <li><a class="white-text" href="#!">Link 1</a></li>
-                        <li><a class="white-text" href="#!">Link 2</a></li>
-                        <li><a class="white-text" href="#!">Link 3</a></li>
-                        <li><a class="white-text" href="#!">Link 4</a></li>
+                        <li><a class="white-text" href="#">Link 1</a></li>
+                        <li><a class="white-text" href="#">Link 2</a></li>
+                        <li><a class="white-text" href="#">Link 3</a></li>
+                        <li><a class="white-text" href="#">Link 4</a></li>
                     </ul>
                 </div>
                 <div class="col l3 s12">
                     <h5 class="white-text">Connect</h5>
                     <ul>
-                        <li><a class="white-text" href="#!">Link 1</a></li>
-                        <li><a class="white-text" href="#!">Link 2</a></li>
-                        <li><a class="white-text" href="#!">Link 3</a></li>
-                        <li><a class="white-text" href="#!">Link 4</a></li>
+                        <li><a class="white-text" href="#">Link 1</a></li>
+                        <li><a class="white-text" href="#">Link 2</a></li>
+                        <li><a class="white-text" href="#">Link 3</a></li>
+                        <li><a class="white-text" href="#">Link 4</a></li>
                     </ul>
                 </div>
             </div>
@@ -149,14 +161,14 @@
         </div>
     </div>
 </div>
-<div id="modal1" class="modal">
+<div id="modal-post" class="modal">
     <div class="modal-content">
-        <h4>Error</h4>
-        <p>Texto error</p>
+        <h4 id="modal-post-title">Error</h4>
+        <p id="modal-post-text">Texto error</p>
     </div>
     <div class="modal-footer">
-        <a id="ver_posts" href="#!" class="modal-action modal-close waves-effect waves-red btn-flat ">Ver posts</a>
-        <a id="cerrar_modal_post" href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Ver error</a>
+        <a id="modal-ver-posts" href="#!" class="modal-action modal-close waves-effect waves-red btn-flat ">Ver posts</a>
+        <a id="modal-cerrar-modal_post" href="#!" class="modal-action modal-close waves-effect waves-green btn-flat ">Seguir aquí</a>
     </div>
 </div>
 
