@@ -1,9 +1,14 @@
 (function($){
     $(function(){
         let ip_user = '';
-        $.getJSON('https://freegeoip.net/json/?callback=?', function(data) {
-            ip_user = data.ip;
-        });
+        try{
+            $.getJSON('https://freegeoip.net/json/?callback=?', function(data) {
+                ip_user = data.ip;
+            });
+        }catch (e){
+
+        }
+
         $('.modal').modal();
 
         let palette_colors = [
@@ -34,7 +39,9 @@
 
         let cont_colors = 0;
         $.each(palette_colors, function(i, p) {
-            if(cont_colors !== palette_colors.length-1 && cont_colors !== palette_colors.length-2){
+            if (cont_colors !== palette_colors.length-1 &&
+                cont_colors !== palette_colors.length-2 &&
+                cont_colors !== palette_colors.length-3){
                 $('#author_color').append($('<option></option>').val(p).html(p));
             }
             cont_colors++;
@@ -46,8 +53,9 @@
             type:  'get',
             dataType: "json",
             beforeSend: function () {
-                $('#modal-preload').addClass('modal-transparent');
-                $('#modal-preload').modal('open');
+                let modal_preload = '#modal-preload';
+                $(modal_preload).addClass('modal-transparent');
+                $(modal_preload).modal('open');
                 $('.modal-overlay').addClass('modal-overlay-load');
             },
             success:  function (response) {
@@ -88,6 +96,9 @@
                 }
 
                 init();
+            },
+            error: function (response) {
+                console.log(response);
             }
         });
 
@@ -105,13 +116,16 @@
             Materialize.fadeInImage(update_col);
         });
 
-        $('#image_url').keyup(function() {
+        let image_change = function() {
             let image_previw = '#image-preview';
             $(image_previw).attr('src', $(this).val());
             $(image_previw).on('error', function() {
                 $(image_previw).attr('src', 'img/no-preview-available.png');
             });
-        });
+        };
+        let image_url = '#image_url';
+        $(image_url).keyup(image_change);
+        $(image_url).change(image_change);
 
         $("#send-post").click(function() {
             let post_form = '#post-form';
@@ -119,25 +133,22 @@
             try {
                 let data_post = $(post_form).serializeArray();
                 for(post in data_post){
-                    if(data_post[post].value === '') {
-                        throw BreakException;
-                    }
+                    if(data_post[post].value === '') throw BreakException;
                 }
 
                 write_post_data(
-                    clear_content_html(data_post[0].value),
-                    clear_content_html(data_post[1].value),
-                    clear_content_html(data_post[2].value),
-                    clear_content_html(data_post[3].value),
-                    clear_content_html(data_post[4].value),
-                    clear_content_html(data_post[5].value),
-                    clear_content_html(data_post[6].value));
+                    clear_content_html(data_post[0].value, 1),
+                    clear_content_html(data_post[1].value, 1),
+                    clear_content_html(data_post[2].value, 1),
+                    clear_content_html(data_post[3].value, 1),
+                    clear_content_html(data_post[4].value, 1),
+                    clear_content_html(data_post[5].value, 1),
+                    clear_content_html(data_post[6].value, 0));
 
                 $(post_form).trigger("reset");
                 $('#modal-post-title').html('ANONFACT añadido!');
                 $('#modal-post-text').html('<div class="def-color-text">Continuar agregando?</div>');
             }catch (e){
-                console.log(e);
                 $('#modal-post-title').html('ERROR!');
                 $('#modal-post-text').html('<div class="def-color-text">Error: Todos los campos son obligatorios!</div>');
             }
@@ -148,13 +159,40 @@
 
         });
 
-        function clear_content_html(rawString) {
+        function clear_content_html(rawString,case_html) {
             let clean_html = rawString;
-            clean_html = clean_html.replace('<script type="text/javascript">', '');
-            clean_html = clean_html.replace('<script>', '');
-            clean_html = clean_html.replace('<script', '');
-            clean_html = clean_html.replace('</script>', '');
+            switch (case_html){
+                case 0:
+                    clean_html = clean_html.replace('<script type="text/javascript">', '');
+                    clean_html = clean_html.replace('<script>', '');
+                    clean_html = clean_html.replace('<script', '');
+                    clean_html = clean_html.replace('</script>', '');
+                    break;
+                case 1:
+                    clean_html = clean_html.replace(/<[^>]*>/g,'');
+                    break;
+            }
             return clean_html;
+        }
+        function get_date_now() {
+            let d = new Date();
+            let day = d.getDate();
+            let month = d.getMonth()+1;
+            let year = d.getFullYear();
+
+            let day_length = day.toString().length;
+            let month_length = month.toString().length;
+            if(day_length < 2){
+                day = '0'+day;
+            }
+            if(month_length < 2){
+                month = '0'+month;
+            }
+
+            let hour = d.getHours();
+            let minute = d.getMinutes();
+
+            return day + '-' + month + '-' + year + ', ' + hour + ':' + minute;
         }
         function init(){
             $('.parallax').parallax();
@@ -353,6 +391,7 @@
                 "</style>");
         }
         function write_post_data(author, author_color, image_url, email, title, detail, content_html) {
+            let date_now = get_date_now();
             let postData = {
                 author: author,
                 title: title,
@@ -361,7 +400,8 @@
                 content : content_html,
                 author_color : author_color,
                 email : email,
-                ip: ip_user
+                ip: ip_user,
+                post_date:date_now
             };
             // Get a key for a new Post.
             let newPostKey = firebase.database().ref().child('Hosting').child('posts').push().key;
