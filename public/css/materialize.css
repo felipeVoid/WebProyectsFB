@@ -9405,3 +9405,18 @@ button.picker__today:focus, button.picker__clear:focus, button.picker__close:foc
   stroke-linecap: round;
   /*shape-rendering: crispEdges;*/
 }
+#subir {
+  position: fixed;
+  z-index: 999;
+  bottom: 7px;
+  right: 15px;
+  font-size: 50px;
+  color: #fff;
+  opacity: 0.8;
+  cursor: pointer;
+  background: rgba(0, 0, 0, 0.8);
+  width: 50px;
+  -webkit-border-radius: 5px;
+  border-radius: 5px;
+  display: none;
+}
