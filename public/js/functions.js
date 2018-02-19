@@ -92,6 +92,10 @@
                 }
 
                 let theme_color = response['theme_color'];
+                let ran_num = Math.floor((Math.random() * (palette_colors.length - 3)));
+                if(theme_color === 'crazy'){
+                    theme_color = palette_colors[ran_num];
+                }
                 theme_colored(theme_color);
 
                 let content = response['content'];
@@ -119,10 +123,11 @@
             },
             error: function (response) {
                 console.log(response);
+                window.location.replace('/');
             }
         });
 
-        filter_post_click('btn-filter-module');
+        filter_post_click('btn-filter-module', 'm');
         filter_post_click('btn-filter-list');
 
         let image_change = function() {
@@ -183,11 +188,12 @@
             }
             return clean_html;
         }
-        function filter_post_click(btn_id) {
+        function filter_post_click(btn_id, size = '') {
+            if (size === 'm')size = ' m4';
             $('#' + btn_id).click(function() {
                 let update_col = '#post-section > .row > .col';
                 $(update_col).removeClass('s12 m4');
-                $(update_col).addClass('col s12');
+                $(update_col).addClass('col s12' + size);
                 Materialize.fadeInImage(update_col);
             });
         }
