@@ -1,37 +1,28 @@
 const functions = require('firebase-functions');
 
-// // Create and Deploy Your First Cloud Functions
-// // https://firebase.google.com/docs/functions/write-firebase-functions
-//
-// exports.helloWorld = functions.https.onRequest((request, response) => {
-//  response.send("Hello from Firebase!");
-// });
-exports.paletteColors = functions.https.onRequest((req, res) => {
-    let palette_colors = [
-        'materialize-red',
-        'red',
-        'pink',
-        'purple',
-        'deep-purple',
-        'indigo',
-        'blue',
-        'light-blue',
-        'cyan',
-        'teal',
-        'green',
-        'light-green',
-        'lime',
-        'yellow',
-        'amber',
-        'orange',
-        'deep-orange',
-        'brown',
-        'blue-grey',
-        'grey',
-        'black',
-        'white',
-        'transparent',
-    ];
-    res.status(200).send(palette_colors);
-});
+const admin = require('firebase-admin');
+admin.initializeApp(functions.config().firebase);
+
+const SENDGRID_API_KEY = functions.config().sendgrid.key;
+
+const sgMail = require('@sendgrid/mail');
+sgMail.setApiKey(SENDGRID_API_KEY);
+
+exports.databaseEmail = functions.database.ref('/items/messages')
+    .onCreate((snapshot, context) => {
+        // Grab the current value of what was written to the Realtime Database.
+        const original = snapshot.val();
+
+        const msg = {
+            to: 'rene.gonzalez@rinno.la',
+            from: 'felipe.fende@gmail.com',
+            subject: original,
+            templateId: 'd-337cfb1366cd406fb0c4041fd5d0e0de',
+            substitutionWrappers: ['{{', '}}'],
+            substitutions: {
+                name: 'Rene'
+            }
+        };
+        sgMail.send(msg);
+    });
 
